@@ -11,7 +11,7 @@ class Announcement(models.Model):
     created_at = models.DateTimeField(default=datetime.datetime.now)
     post_at = models.DateTimeField()
 
-class Categories(models.Model):
+class Category(models.Model):
     CATEGORY_TYPES = ((1, u'Food'),(2,u'Nonfood'))
 
     name = models.CharField(max_length=128)
@@ -23,7 +23,7 @@ class Profile(models.Model):
     push_id = models.CharField(max_length=128)
     school = models.ForeignKey("School")
     name = models.CharField(max_length=128)
-    avatar = models.ImageField(upload_to='avatars/')
+    avatar = models.ImageField(upload_to='avatars/', blank=True)
     phone = models.CharField(max_length=128)
     token = models.CharField(max_length=32)
     created_at = models.DateTimeField(default=datetime.datetime.now)
@@ -31,18 +31,21 @@ class Profile(models.Model):
     is_privacy = models.BooleanField(default=False)
     is_eula = models.BooleanField(default=False)
     is_verify = models.BooleanField(default=False)
-    referral = models.ForeignKey('self')
-    orders = models.ManyToManyField("Order")
+    referral = models.ForeignKey('self', blank=True)
+    orders = models.ManyToManyField("Order", blank=True)
     is_driver = models.BooleanField(default=False)
     reviews = models.ManyToManyField("Review", blank=True)
-    schedule = models.CharField(max_length=2048,validators=[validate_comma_separated_integer_list])
+    schedule = models.CharField(max_length=2048,validators=[validate_comma_separated_integer_list],blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Order(models.Model):
     ORDER_STATUS = ((1, u'pending acceptance'),(2, u'accepted'),(3, u'pending payment approval'),(4, u'completed'),(5, u'cancelled'))
     created_at = models.DateTimeField(default=datetime.datetime.now)
     status = models.SmallIntegerField(choices=ORDER_STATUS)
     store = models.ForeignKey("Store")
-    review = models.ForeignKey("Review", null=True)
+    review = models.ForeignKey("Review", null=True, blank=True)
     gmv = models.FloatField()
     driver_cut = models.FloatField()
     management_cut = models.FloatField()
@@ -60,7 +63,7 @@ class ItemQuantity(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=128)
     price = models.IntegerField()
-    addons = models.ManyToManyField('self', null=True)
+    addons = models.ManyToManyField('self')
     store = models.ForeignKey("Store")
 
 class Promo(models.Model):
@@ -87,3 +90,6 @@ class Message(models.Model):
 class School(models.Model):
     name = models.CharField(max_length=128)
     hours_of_operation = models.CharField(max_length=2048,validators=[validate_comma_separated_integer_list])
+
+    def __str__(self):
+        return self.name

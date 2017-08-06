@@ -7,5 +7,3 @@ class ApiVersionCheck(APIView):
             return True
         else:
             return False
-
-
