@@ -25,7 +25,7 @@ SECRET_KEY = '_!*b6_0uiprpva2+d5c-^--y-&r17+vlf-^y7zf*d-z5d-m148'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.distributed.chat','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['.distributed.chat','127.0.0.1','localhost','192.168.1.11']
 
 
 # Application definition
@@ -120,8 +120,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+ENV_PATH = os.path.abspath(os.path.dirname(__file__))
+PROJECT_PATH = os.path.join(ENV_PATH, os.pardir)
+
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 
 LATEST_CLIENT_VERSION = 1
+
+MEDIA_ROOT = PROJECT_PATH #os.path.join(PROJECT_PATH, "photos")

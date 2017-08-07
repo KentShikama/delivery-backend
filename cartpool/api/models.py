@@ -18,6 +18,9 @@ class Category(models.Model):
     image = models.ImageField(upload_to='photos/')
     type = models.SmallIntegerField(choices=CATEGORY_TYPES)
 
+    def __str__(self):
+        return self.name
+
 class Profile(models.Model):
     user = models.OneToOneField(User)
     push_id = models.CharField(max_length=128)
