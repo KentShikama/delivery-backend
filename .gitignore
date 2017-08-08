@@ -4,3 +4,4 @@ store_images/
 ve/
 .idea/
 __pycache__/
+db.sqlite3
