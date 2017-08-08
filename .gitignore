@@ -1,3 +1,6 @@
 *.pyc
 photos/
 store_images/
+ve/
+.idea/
+__pycache__/
