@@ -1,4 +1,4 @@
-"""cartpool URL Configuration
+"""delivery URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -20,7 +20,7 @@ from django.views.static import serve
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('cartpool.api.urls')),
+    url(r'^api/', include('delivery.api.urls')),
 ]
 
 if settings.DEBUG:

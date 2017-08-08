@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
 
-from cartpool.api.models import Category, Store, School
+from delivery.api.models import Category, Store, School
 
 
 class ApiVersionCheck(APIView):
