@@ -35,29 +35,33 @@ class Profile(models.Model):
     is_eula = models.BooleanField(default=False)
     is_verify = models.BooleanField(default=False)
     referral = models.ForeignKey('self', blank=True)
-    orders = models.ManyToManyField("Order", blank=True)
     is_driver = models.BooleanField(default=False)
     reviews = models.ManyToManyField("Review", blank=True)
     schedule = models.CharField(max_length=2048,validators=[validate_comma_separated_integer_list],blank=True)
+    latest_delivery_location = models.CharField(max_length=128,null=True)
 
     def __str__(self):
         return self.name
 
 class Order(models.Model):
-    ORDER_STATUS = ((1, u'pending acceptance'),(2, u'accepted'),(3, u'pending payment approval'),(4, u'completed'),(5, u'cancelled'))
+    ORDER_STATUS = ((0,u'not made'),(1, u'pending acceptance'),(2, u'accepted'),(3, u'pending payment approval'),(4, u'completed'),(5, u'cancelled'))
     created_at = models.DateTimeField(default=datetime.datetime.now)
     status = models.SmallIntegerField(choices=ORDER_STATUS)
     store = models.ForeignKey("Store")
     review = models.ForeignKey("Review", null=True, blank=True)
-    gmv = models.FloatField()
-    driver_cut = models.FloatField()
-    management_cut = models.FloatField()
-    tips = models.FloatField()
-    total_cost = models.FloatField()
-    driver_profit = models.FloatField() # drivers_cut + tips - 0.3 - 0.029*total_cost
-    driver_payout = models.FloatField() # driver_profit + gmv
-    promo_code = models.ForeignKey("Promo")
+    gmv = models.FloatField(null=True)
+    driver_cut = models.FloatField(null=True)
+    management_cut = models.FloatField(null=True)
+    tips = models.FloatField(null=True)
+    total_cost = models.FloatField(null=True)
+    driver_profit = models.FloatField(null=True) # drivers_cut + tips - 0.3 - 0.029*total_cost
+    driver_payout = models.FloatField(null=True) # driver_profit + gmv
+    promo_code = models.ForeignKey("Promo", null=True, blank=True)
     item_quantities = models.ManyToManyField("ItemQuantity", blank=True)
+    school = models.ForeignKey("School", null=True)
+    delivery_location = models.CharField(max_length=128,null=True)
+    driver = models.ForeignKey("Profile", related_name="driver",null=True)
+    customer = models.ForeignKey("Profile", related_name="customer",null=True)
 
 class ItemQuantity(models.Model):
     amount = models.IntegerField()
@@ -65,15 +69,15 @@ class ItemQuantity(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=128)
-    price = models.IntegerField()
-    addons = models.ManyToManyField('self')
+    price = models.IntegerField(null=True, blank=True)
+    addons = models.ManyToManyField('self', blank=True)
     store = models.ForeignKey("Store")
 
     def __str__(self):
         return self.name
 
 class Promo(models.Model):
-    code = models.CharField(max_length=128)
+    code = models.CharField(max_length=128, primary_key=True)
     type = models.CharField(max_length=128)
 
 class Review(models.Model):
