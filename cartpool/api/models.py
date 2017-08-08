@@ -69,6 +69,9 @@ class Item(models.Model):
     addons = models.ManyToManyField('self')
     store = models.ForeignKey("Store")
 
+    def __str__(self):
+        return self.name
+
 class Promo(models.Model):
     code = models.CharField(max_length=128)
     type = models.CharField(max_length=128)
@@ -84,6 +87,10 @@ class Store(models.Model):
     schools = models.ManyToManyField("School", blank=True)
     hours_of_operation = models.CharField(max_length=2048,validators=[validate_comma_separated_integer_list])
     is_partnered = models.BooleanField(default=False)
+    category = models.ManyToManyField("Category")
+
+    def __str__(self):
+        return self.name
 
 class Message(models.Model):
     sender = models.ForeignKey("Profile", related_name="message_sender")
